@@ -7,6 +7,11 @@ import os
 import sys
 import requests
 from tqdm import tqdm
+from bs4 import BeautifulSoup as soup
+
+source = requests.get('https://own.gamesmc.online/Download8x').content
+soup = soup(source, 'html.parser')
+print(soup.get_text())
 
 download_url_dic = {
     1: '',
@@ -29,8 +34,8 @@ def select():
 
 lable1 = tk.Label(root, font=('微软雅黑', '15', 'bold'), fg='#43CD80')
 lable1.pack(side='bottom')
-site = [('1.19.3+', 1),
-        ('1.13 to 1.19.2', 2),
+site = [('1.19.3+ Patches', 1),
+        ('1.19.2-', 2),
         ('1.12.2-', 3),
         ('1.8 for PVP', 4)]
 # IntVar() 用于处理整数类型的变量
