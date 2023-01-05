@@ -11,13 +11,18 @@ from bs4 import BeautifulSoup as soup
 
 source = requests.get('https://own.gamesmc.online/Download8x').content
 soup = soup(source, 'html.parser')
-print(soup.get_text())
+download_url = soup.get_text()
+print(download_url)
+
+download_urls = download_url.split(':;')
+print(download_urls)
+
 
 download_url_dic = {
-    1: '',
-    2: '',
-    3: '',
-    4: ''
+    1: download_urls[0],
+    2: download_urls[1],
+    3: download_urls[2],
+    4: download_urls[3],
 }
 
 root = ttk.Window()
@@ -53,12 +58,16 @@ def download(*args):
     if download_url_choose == False:
         tk.messagebox.showerror('错误', message='您还没有选择下载版本！')
     try:
-        duan_download(download_url_dic[download_url_choose])
+        root.destroy()
+        part_download(download_url_dic[download_url_choose])
     except:
         tk.messagebox.showerror('错误', message='下载失败！请联系MCommander2077以获得更多信息')
+        sys.exit(0)
+    tk.messagebox.showinfo('下载成功', message='下载成功！')
+    sys.exit(0)
 
 
-def duan_download(url):
+def part_download(url):
     r = requests.get(url, stream=True)
     # 获取文件大小
     file_size = int(r.headers['content-length'])
