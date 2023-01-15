@@ -24,6 +24,8 @@ def get_download_url():
         2: download_urls[1],
         3: download_urls[2],
         4: download_urls[3],
+        5: download_urls[4],
+        6: download_urls[5]
     }
     if __name__ == '__main__':
         print(download_urls)
@@ -59,8 +61,10 @@ def window():
     lable1.pack(side='bottom')
     site = [('1.19.3+ Patches', 1),
             ('1.19.2-', 2),
-            ('1.12.2-', 3),
-            ('1.8 for PVP', 4)]
+            ('1.8 for PVP', 3),
+            ('BE',4),
+            ('DLC - 8x Create',5),
+            ('DLC - 8x Default PBR',6)]
     # IntVar() 用于处理整数类型的变量
     v = tk.IntVar()
     for name, num in site:
