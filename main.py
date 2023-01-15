@@ -1,7 +1,7 @@
 import os
 import sys
 import tkinter as tk
-import tkinter.messagebox
+import tkinter.messagebox as tkm
 
 import requests
 import ttkbootstrap as ttk
@@ -11,13 +11,26 @@ from ttkbootstrap.constants import *
 
 
 def get_download_url():
-    global download_url_dic,download_url_choose
+    global download_url_dic, download_url_choose,config_file,config_read
     try:
         source = requests.get('https://own.gamesmc.online/Download8x').content
     except:
         return 'DOWNLOAD_URL_GET_ERROR'
     soup = bs(source, 'html.parser')
     download_url = soup.get_text()
+    try:
+        config_file = open("C:/ProgramData/8xDownload_config.txt", 'r')
+        config_read = config_file.read()
+    except:
+        config_file = open("C:/ProgramData/8xDownload_config.txt", 'w+')
+        config_file.write(download_url)
+        config_file = open("C:/ProgramData/8xDownload_config.txt", 'r')
+        config_read = config_file.read()
+    else:
+        if config_read == download_url:
+            tkm.showinfo("更新检查",message="您目前为最新版本！")
+        else:
+            tkm.showerror("更新检查",message="您需要更新！")
     download_urls = download_url.split(':;')
     download_url_dic = {
         1: download_urls[0],
@@ -27,23 +40,21 @@ def get_download_url():
         5: download_urls[4],
         6: download_urls[5]
     }
-    if __name__ == '__main__':
-        print(download_urls)
-        print(download_url_dic)
     return True
 
 # 下载按钮
 
 
 def download(*args):
-    global download_url_dic,download_url_choose
+    global download_url_dic, download_url_choose
     global root
     if download_url_choose == False:
         tk.messagebox.showerror('错误', message='您还没有选择下载版本！')
     root.destroy()
     return_code = part_download(download_url_dic[download_url_choose])
     if not return_code == True:
-        tk.messagebox.showerror('错误', message=('下载失败！错误码：'+return_code+'\n请联系MCommander2077以获得更多信息'))
+        tk.messagebox.showerror('错误', message=(
+            '下载失败！错误码：'+return_code+'\n请联系MCommander2077以获得更多信息'))
         sys.exit(0)
     tk.messagebox.showinfo('下载成功', message='下载成功！')
     sys.exit(0)
@@ -51,7 +62,7 @@ def download(*args):
 
 def window():
     global root, v
-    global download_url_dic,download_url_choose
+    global download_url_dic, download_url_choose
     root = ttk.Window()
     root.title('8x-default 文件下载')
     root.geometry('400x300')
@@ -62,9 +73,9 @@ def window():
     site = [('1.19.3+ Patches', 1),
             ('1.19.2-', 2),
             ('1.8 for PVP', 3),
-            ('BE',4),
-            ('DLC - 8x Create',5),
-            ('DLC - 8x Default PBR',6)]
+            ('BE', 4),
+            ('DLC - 8x Create', 5),
+            ('DLC - 8x Default PBR', 6)]
     # IntVar() 用于处理整数类型的变量
     v = tk.IntVar()
     for name, num in site:
@@ -72,7 +83,7 @@ def window():
             root, text=name, variable=v, value=num, command=select)
         radio_button.pack(anchor='w')
     but = ttk.Button(root, text='下载', command=download)
-    but.place(x=10, y=150, width=70, height=30)
+    but.place(x=10, y=200, width=70, height=30)
 
 
 def select():
@@ -115,7 +126,8 @@ def part_download(url):
 if __name__ == '__main__':
     window()
     return_code = get_download_url()
-    if  not return_code == True:
-        tk.messagebox.showerror('错误', message=('下载失败！错误码：'+return_code+'\n请联系MCommander2077以获得更多信息'))
+    if not return_code == True:
+        tkm.showerror('错误', message=(
+            '下载失败！错误码：'+return_code+'\n请联系MCommander2077以获得更多信息'))
         sys.exit(0)
     root.mainloop()
