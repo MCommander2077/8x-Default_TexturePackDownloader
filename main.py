@@ -49,14 +49,13 @@ def download(*args):
     global download_url_dic, download_url_choose
     global root
     if download_url_choose == False:
-        tk.messagebox.showerror('错误', message='您还没有选择下载版本！')
+        tkm.showerror('错误', message='您还没有选择下载版本！')
     root.destroy()
     return_code = part_download(download_url_dic[download_url_choose])
     if not return_code == True:
-        tk.messagebox.showerror('错误', message=(
-            '下载失败！错误码：'+return_code+'\n请联系MCommander2077以获得更多信息'))
+        tkm.showerror('错误', message='下载失败！\n请联系MCommander2077以获得更多信息')
         sys.exit(0)
-    tk.messagebox.showinfo('下载成功', message='下载成功！')
+    tkm.showinfo('下载成功', message='下载成功！')
     sys.exit(0)
 
 
@@ -106,33 +105,32 @@ def part_download(url):
     if os.path.exists(file_name):
         first_byte = os.path.getsize(file_name)
 
-    # 判断是否已经下载完成
-    if first_byte >= file_size:
-        return
     # Range 加入请求头
     header = {"Range": f"bytes={first_byte}-{file_size}"}
-    with requests.get(url, headers=header, stream=True) as r:
-            with open(file_name, 'ab') as fp:
-                for chunk in r.iter_content(chunk_size=512):
-                    if chunk:
-                        fp.write(chunk)
+    # 判断是否已经下载完成
+    if first_byte >= file_size:
+        return True
     # 加了一个 initial 参数
-    '''with tqdm(total=file_size, unit='B', initial=first_byte, unit_scale=True, unit_divisor=1024, ascii=True, desc=file_name) as bar:
+    with tqdm(total=file_size, unit='B', initial=first_byte, unit_scale=True, unit_divisor=1024, ascii=True, desc=file_name) as bar:
         # 加 headers 参数
         with requests.get(url, headers=header, stream=True) as r:
             with open(file_name, 'ab') as fp:
                 for chunk in r.iter_content(chunk_size=512):
                     if chunk:
                         fp.write(chunk)
-                        bar.update(len(chunk))'''
+                        bar.update(len(chunk))
     return True
 
 
-if __name__ == '__main__':
+def main():
     window()
     return_code = get_download_url()
     if not return_code == True:
         tkm.showerror('错误', message=(
-            '下载失败！错误码：'+return_code+'\n请联系MCommander2077以获得更多信息'))
+            '获取下载链接失败！错误码：'+return_code+'\n请联系MCommander2077以获得更多信息'))
         sys.exit(0)
     root.mainloop()
+
+
+if __name__ == '__main__':
+    main()
