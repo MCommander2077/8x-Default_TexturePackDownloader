@@ -11,7 +11,7 @@ from ttkbootstrap.constants import *
 
 
 def get_download_url():
-    global download_url_dic, download_url_choose,config_file,config_read
+    global download_url_dic, download_url_choose, config_file, config_read
     try:
         source = requests.get('https://own.gamesmc.online/Download8x').content
     except:
@@ -28,9 +28,9 @@ def get_download_url():
         config_read = config_file.read()
     else:
         if config_read == download_url:
-            tkm.showinfo("更新检查",message="您目前为最新版本！")
+            tkm.showinfo("更新检查", message="您目前为最新版本！")
         else:
-            tkm.showerror("更新检查",message="您需要更新！")
+            tkm.showerror("更新检查", message="您需要更新！")
     download_urls = download_url.split(':;')
     download_url_dic = {
         1: download_urls[0],
@@ -111,15 +111,20 @@ def part_download(url):
         return
     # Range 加入请求头
     header = {"Range": f"bytes={first_byte}-{file_size}"}
+    with requests.get(url, headers=header, stream=True) as r:
+            with open(file_name, 'ab') as fp:
+                for chunk in r.iter_content(chunk_size=512):
+                    if chunk:
+                        fp.write(chunk)
     # 加了一个 initial 参数
-    with tqdm(total=file_size, unit='B', initial=first_byte, unit_scale=True, unit_divisor=1024, ascii=True, desc=file_name) as bar:
+    '''with tqdm(total=file_size, unit='B', initial=first_byte, unit_scale=True, unit_divisor=1024, ascii=True, desc=file_name) as bar:
         # 加 headers 参数
         with requests.get(url, headers=header, stream=True) as r:
             with open(file_name, 'ab') as fp:
                 for chunk in r.iter_content(chunk_size=512):
                     if chunk:
                         fp.write(chunk)
-                        bar.update(len(chunk))
+                        bar.update(len(chunk))'''
     return True
 
 
