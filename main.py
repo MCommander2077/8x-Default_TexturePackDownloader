@@ -2,8 +2,8 @@ import os
 import sys
 import tkinter as tk
 import tkinter.messagebox as tkm
-
 import requests
+import chardet
 import ttkbootstrap as ttk
 from bs4 import BeautifulSoup as bs
 from tqdm import tqdm

@@ -1,0 +1,4 @@
+PyInstaller: 5.7.0
+Python: 3.11.1
+Command(In the "./8x-Default_TexturePackDownloader"):
+pyinstaller --noconfirm --onefile --windowed --icon ico.ico -p package main.py
