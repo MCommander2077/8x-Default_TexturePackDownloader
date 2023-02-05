@@ -4,7 +4,6 @@ import tkinter as tk
 import tkinter.messagebox as tkm
 import requests
 import chardet
-import ttkbootstrap as ttk
 import customtkinter as ctk
 from bs4 import BeautifulSoup as bs
 from tqdm import tqdm
@@ -81,9 +80,9 @@ def window():
             ('DLC - 8x Create', 5),
             ('DLC - 8x Default PBR', 6)]
     # IntVar() 用于处理整数类型的变量
-    v = ctk.IntVar()
+    v = tk.IntVar()
     for name, num in site:
-        radio_button = ttk.Radiobutton(
+        radio_button = tk.Radiobutton(
             root, text=name, variable=v, value=num, command=select)
         radio_button.pack(anchor='w')
     but = ctk.CTkButton(root, text='下载', command=download)
